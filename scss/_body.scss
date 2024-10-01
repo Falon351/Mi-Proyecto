@@ -1,0 +1,22 @@
+@mixin backgrounds{
+    background: rgb(2,0,36);
+background: linear-gradient(170deg, rgba(2,0,36,1) 24%, rgba(20,20,70,1) 50%, rgba(5,5,5,1) 84%);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Reset de página y estilo del body*/
+body {
+    @include backgrounds;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Roboto", sans-serif;
+    text-decoration: none;
+    list-style: none;
+    z-index: -1;
+    position: relative;
+    overflow-x: hidden;
+}
+

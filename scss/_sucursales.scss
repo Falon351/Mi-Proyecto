@@ -1,0 +1,69 @@
+/* Estilos para Sucursales */
+
+.info-sucursales {
+    width: 70%;
+    height: 190;
+    margin: 150px auto 20px;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 1)), url(../img/photocall-juegos-neon-dibujado-mano_23-2149860761.avif);
+    background-size: cover;
+    background-position: center;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgb(230, 7, 163);
+    text-align: center;
+    display: block;
+    justify-content: center;
+    align-items: center;
+}
+
+.titulo-sucursales {
+    font-size: 2.5rem;
+    color: #cfc7c7;
+    text-align: center;
+    margin-bottom: 70px;
+    padding-left: 30px;
+    text-shadow: 0 0 15px rgba(90, 66, 92, 0.925);
+    filter: brightness(1.2);
+    margin-top: -80px;
+}
+
+.mapa {
+    margin-top: -40px;
+    height: 400px;
+    width: 70%;
+    margin: 0px auto;
+    margin-bottom: 30px;
+}
+
+.info-sucursales {
+    ul {
+        list-style-type: none;
+        margin: 0 auto;
+        padding: 0;
+        gap: 20px;
+        max-width: 90%;
+
+        li {
+            font-size: 1rem;
+            text-align: center;
+            font-family: "Roboto", sans-serif;
+            border: 1px solid rgb(255, 5, 255);
+            border-radius: 10px;
+            margin: 15px auto;
+            padding: 10px 15px;
+            box-shadow: 0 0 10px rgb(230, 7, 92);
+            width: 80%;
+            color: $color-blanco;
+        }
+    }
+
+    .mapa iframe {
+        width: 100%;
+        height: 100%;
+        box-shadow: 0 0 15px rgb(7, 197, 230);
+    border: 1px solid rgb(5, 168, 243);
+    border-radius: 10px;
+        margin-top: -40px;
+        
+    }
+}

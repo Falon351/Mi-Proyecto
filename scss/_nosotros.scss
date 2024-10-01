@@ -1,0 +1,57 @@
+/* nosotros */
+
+.info-nosotros {
+    width: 70%;
+    height: 170;
+    margin: 150px  auto;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.904)), url(../img/photocall-juegos-neon-dibujado-mano_23-2149860761.avif);
+    background-size: cover;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgb(230, 7, 163);
+    text-align: center;
+    display: block;
+    justify-content: center;
+    align-items: center;
+}
+
+.titulo-nosotros {
+    font-size: 2rem;
+    color: $color-blanco;
+    text-align: center;
+    margin-bottom: 30px;
+    margin-top: -90px;
+    text-shadow: 0 0 20px rgba(234, 0, 255, 0.925);
+    filter: brightness(1.2);
+}
+
+.info-nosotros {
+    p {
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        // text-align: justify;
+        font-family: "Roboto", sans-serif;
+        color: $color-blanco;
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin-bottom: 20px;
+        text-align: left;
+
+        li {
+            font-size: 1rem;
+            text-align: center;
+            font-family: "Roboto", sans-serif;
+            border: 1px solid rgb(255, 5, 255);
+            border-radius: 10px;
+            margin: 15px auto;
+            padding: 10px 15px;
+            box-shadow: 0 0 10px rgb(230, 7, 92);
+            width: 70%;
+            color: $color-blanco;
+        }
+    }
+}
