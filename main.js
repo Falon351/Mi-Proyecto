@@ -31,12 +31,12 @@ productoLista.addEventListener('click', e => {
         // Actualizar cantidad o agregar producto
         const existe = allProducts.find(p => p.title === infoProduct.title);
         if (existe) {
-            existe.quantity++; // Aumentar la cantidad directamente
+            existe.quantity++; 
         } else {
             allProducts.push(infoProduct);
         }
 
-        // Mostrar el carrito si está oculto
+        
         if (containerCartProducts.classList.contains('hidden-cart')) {
             containerCartProducts.classList.remove('hidden-cart');
         }
@@ -51,13 +51,13 @@ rowProduct.addEventListener('click', (e) => {
         const product = e.target.closest('.cart-product');
         const title = product.querySelector('.titulo-producto-carrito').textContent;
 
-        // Eliminar producto del arreglo
+        
         allProducts = allProducts.filter(p => p.title !== title);
         
-        // Mostrar el carrito actualizado
+        
         showHTML();
         
-        // Si ya no hay productos, ocultar el carrito
+        
         if (!allProducts.length) {
             containerCartProducts.classList.add('hidden-cart');
         }
@@ -80,7 +80,7 @@ const showHTML = () => {
         const containerProduct = document.createElement('div');
         containerProduct.classList.add('cart-product');
 
-        // Solo mostrar el precio total entre paréntesis
+        
         const totalPrice = formatPrice(product.price * product.quantity);
         containerProduct.innerHTML = `
         <div class="info-cart-product">
@@ -95,7 +95,7 @@ const showHTML = () => {
         `;
 
         rowProduct.append(containerProduct);
-        total += product.price * product.quantity; // Sumar el total
+        total += product.price * product.quantity; 
     });
 
     valorTotal.innerText = formatPrice(total);
