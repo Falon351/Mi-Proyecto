@@ -276,6 +276,10 @@ header {
   color: white;
 }
 
+.precio-item {
+  display: none;
+}
+
 /* Títulos y párrafos */
 h1 {
   color: #fafafa;
