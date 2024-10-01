@@ -12,14 +12,12 @@ let allProducts = [];
 const valorTotal = document.querySelector('.total-pagar');
 const countProduct = document.querySelector('#contador-productos');
 
-// Función para formatear el precio usando Intl.NumberFormat
-
+// Función para formatear el precio
 const formatPrice = (price) => {
     return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(price);
 };
 
 // Evento para agregar productos al carrito
-
 productoLista.addEventListener('click', e => {
     if (e.target.classList.contains('boton-item')) {
         const product = e.target.parentElement;
@@ -30,24 +28,18 @@ productoLista.addEventListener('click', e => {
             price: parseFloat(product.querySelector('.precio-item').textContent.replace(/\./g, "").replace("$", ""))
         };
 
-        const existe = allProducts.some(p => p.title === infoProduct.title);
+        // Actualizar cantidad o agregar producto
+        const existe = allProducts.find(p => p.title === infoProduct.title);
         if (existe) {
-            allProducts = allProducts.map(p => {
-                if (p.title === infoProduct.title) {
-                    p.quantity++;
-                }
-                return p;
-            });
+            existe.quantity++;
         } else {
             allProducts.push(infoProduct);
         }
 
         // Mostrar el carrito si está oculto
-
         if (containerCartProducts.classList.contains('hidden-cart')) {
             containerCartProducts.classList.remove('hidden-cart');
         }
-        
 
         showHTML();
     }
@@ -65,9 +57,7 @@ rowProduct.addEventListener('click', (e) => {
 });
 
 // Mostrar HTML
-
 const showHTML = () => {
-
     if (!allProducts.length) {
         rowProduct.innerHTML = `<p class="cart-empty">No hay productos agregados al carrito.</p>`;
         valorTotal.innerText = formatPrice(0);
@@ -76,19 +66,19 @@ const showHTML = () => {
     }
 
     rowProduct.innerHTML = '';
-
     let total = 0;
-    let totalOfProducts = 0;
 
     allProducts.forEach(product => {
         const containerProduct = document.createElement('div');
         containerProduct.classList.add('cart-product');
 
+        // Solo mostrar el precio total entre paréntesis
+        const totalPrice = formatPrice(product.price * product.quantity);
         containerProduct.innerHTML = `
         <div class="info-cart-product">
             <span class="cantidad-producto-carrito">${product.quantity}</span>
             <p class="titulo-producto-carrito">${product.title}</p>
-            <span class="precio-producto-carrito">${formatPrice(product.price)} (${formatPrice(product.price * product.quantity)})</span>
+            <span class="precio-producto-carrito">(${totalPrice})</span>
         </div>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
             stroke="currentColor" class="icon-close">
@@ -97,15 +87,12 @@ const showHTML = () => {
         `;
 
         rowProduct.append(containerProduct);
-
-        total += product.quantity * product.price;
-        totalOfProducts += product.quantity;
+        total += product.price * product.quantity; // Sumar el total
     });
 
     valorTotal.innerText = formatPrice(total);
-    countProduct.innerText = totalOfProducts;
-
+    countProduct.innerText = allProducts.reduce((sum, product) => sum + product.quantity, 0);
 };
 
-showHTML()
-
+// Inicializar el carrito vacío al cargar la página
+showHTML();
