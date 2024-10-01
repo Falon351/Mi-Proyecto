@@ -31,7 +31,7 @@ productoLista.addEventListener('click', e => {
         // Actualizar cantidad o agregar producto
         const existe = allProducts.find(p => p.title === infoProduct.title);
         if (existe) {
-            existe.quantity++;
+            existe.quantity++; // Aumentar la cantidad directamente
         } else {
             allProducts.push(infoProduct);
         }
@@ -51,8 +51,16 @@ rowProduct.addEventListener('click', (e) => {
         const product = e.target.closest('.cart-product');
         const title = product.querySelector('.titulo-producto-carrito').textContent;
 
+        // Eliminar producto del arreglo
         allProducts = allProducts.filter(p => p.title !== title);
+        
+        // Mostrar el carrito actualizado
         showHTML();
+        
+        // Si ya no hay productos, ocultar el carrito
+        if (!allProducts.length) {
+            containerCartProducts.classList.add('hidden-cart');
+        }
     }
 });
 
