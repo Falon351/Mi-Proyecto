@@ -5,13 +5,56 @@ const productoLista = document.querySelector('.contenedor-items');
 const valorTotal = document.querySelector('.total-pagar');
 const countProduct = document.querySelector('#contador-productos');
 
-// Recuperar los productos almacenados en localStorage al cargar la página
 let allProducts = JSON.parse(localStorage.getItem('carrito')) || [];
 
 // Función para formatear el precio
 const formatPrice = (price) => new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(price);
 
-// Mostrar HTML del carrito al cargar la página (inicializar)
+// Evento para mostrar/ocultar el carrito usando el operador AND
+btnCart.addEventListener('click', () => {
+    containerCartProducts.classList.toggle('hidden-cart');
+});
+
+// Evento para agregar productos al carrito
+productoLista.addEventListener('click', (e) => {
+    if (e.target.classList.contains('boton-item')) {
+        const product = e.target.parentElement;
+
+        // Usamos desestructuración para obtener los valores del producto
+        const { textContent: title } = product.querySelector('.titulo-item');
+        const price = parseFloat(product.querySelector('.precio-item').textContent.replace(/\./g, "").replace("$", ""));
+
+        // Información del producto
+        const infoProduct = { quantity: 1, title, price };
+
+        // Actualizar cantidad o agregar producto, optimizado con operador ternario
+        const existe = allProducts.find(p => p.title === infoProduct.title);
+        existe ? existe.quantity++ : allProducts.push(infoProduct);
+
+        // Usamos el operador AND para mostrar el carrito si está oculto
+        containerCartProducts.classList.contains('hidden-cart') && containerCartProducts.classList.remove('hidden-cart');
+
+        showHTML();
+    }
+});
+
+// Evento para quitar productos del carrito
+rowProduct.addEventListener('click', (e) => {
+    if (e.target.classList.contains('icon-close')) {
+        const product = e.target.closest('.cart-product');
+        const { textContent: title } = product.querySelector('.titulo-producto-carrito');
+
+        // Usamos el operador spread para crear una nueva lista de productos sin el eliminado
+        allProducts = [...allProducts.filter(p => p.title !== title)];
+
+        showHTML();
+
+        // Ocultar carrito si ya no hay productos
+        !allProducts.length && containerCartProducts.classList.add('hidden-cart');
+    }
+});
+
+// Mostrar HTML del carrito
 const showHTML = () => {
     // Si no hay productos, mostramos un mensaje y reseteamos valores
     if (!allProducts.length) {
@@ -56,50 +99,5 @@ const showHTML = () => {
     localStorage.setItem('carrito', JSON.stringify(allProducts));
 };
 
-// Mostrar el carrito almacenado al cargar la página
+// Inicializar el carrito vacío o con productos recuperados de localStorage
 showHTML();
-
-// Evento para agregar productos al carrito
-productoLista.addEventListener('click', (e) => {
-    if (e.target.classList.contains('boton-item')) {
-        const product = e.target.parentElement;
-
-        // Usamos desestructuración para obtener los valores del producto
-        const { textContent: title } = product.querySelector('.titulo-item');
-        const price = parseFloat(product.querySelector('.precio-item').textContent.replace(/\./g, "").replace("$", ""));
-
-        // Asegurarse de que el precio sea un número válido antes de proceder
-        if (isNaN(price)) {
-            console.error('El precio no es válido.');
-            return;
-        }
-
-        // Información del producto
-        const infoProduct = { quantity: 1, title, price };
-
-        // Actualizar cantidad o agregar producto, optimizado con operador ternario
-        const existe = allProducts.find(p => p.title === infoProduct.title);
-        existe ? existe.quantity++ : allProducts.push(infoProduct);
-
-        // Mostrar carrito si está oculto
-        containerCartProducts.classList.contains('hidden-cart') && containerCartProducts.classList.remove('hidden-cart');
-
-        showHTML();
-    }
-});
-
-// Evento para quitar productos del carrito
-rowProduct.addEventListener('click', (e) => {
-    if (e.target.classList.contains('icon-close')) {
-        const product = e.target.closest('.cart-product');
-        const { textContent: title } = product.querySelector('.titulo-producto-carrito');
-
-        // Usamos el operador spread para crear una nueva lista de productos sin el eliminado
-        allProducts = [...allProducts.filter(p => p.title !== title)];
-
-        showHTML();
-
-        // Ocultar carrito si ya no hay productos
-        !allProducts.length && containerCartProducts.classList.add('hidden-cart');
-    }
-});
