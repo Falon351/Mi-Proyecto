@@ -5,76 +5,36 @@ const productoLista = document.querySelector('.contenedor-items');
 const valorTotal = document.querySelector('.total-pagar');
 const countProduct = document.querySelector('#contador-productos');
 
+// Recupera el carrito del almacenamiento local, o establece un carrito vacío
 let allProducts = JSON.parse(localStorage.getItem('carrito')) || [];
 
-// Función para formatear el precio
+// Función para formatear el precio a la moneda local
 const formatPrice = (price) => new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(price);
 
-// Evento para mostrar/ocultar el carrito usando el operador AND
-btnCart.addEventListener('click', () => {
+// Función para mostrar/ocultar el carrito
+const toggleCartVisibility = () => {
     containerCartProducts.classList.toggle('hidden-cart');
-});
+};
 
-// Evento para agregar productos al carrito
-productoLista.addEventListener('click', (e) => {
-    if (e.target.classList.contains('boton-item')) {
-        const product = e.target.parentElement;
-
-        // Usamos desestructuración para obtener los valores del producto
-        const { textContent: title } = product.querySelector('.titulo-item');
-        const price = parseFloat(product.querySelector('.precio-item').textContent.replace(/\./g, "").replace("$", ""));
-
-        // Información del producto
-        const infoProduct = { quantity: 1, title, price };
-
-        // Actualizar cantidad o agregar producto, optimizado con operador ternario
-        const existe = allProducts.find(p => p.title === infoProduct.title);
-        existe ? existe.quantity++ : allProducts.push(infoProduct);
-
-        // Usamos el operador AND para mostrar el carrito si está oculto
-        containerCartProducts.classList.contains('hidden-cart') && containerCartProducts.classList.remove('hidden-cart');
-
-        showHTML();
-    }
-});
-
-// Evento para quitar productos del carrito
-rowProduct.addEventListener('click', (e) => {
-    if (e.target.classList.contains('icon-close')) {
-        const product = e.target.closest('.cart-product');
-        const { textContent: title } = product.querySelector('.titulo-producto-carrito');
-
-        // Usamos el operador spread para crear una nueva lista de productos sin el eliminado
-        allProducts = [...allProducts.filter(p => p.title !== title)];
-
-        showHTML();
-
-        // Ocultar carrito si ya no hay productos
-        !allProducts.length && containerCartProducts.classList.add('hidden-cart');
-    }
-});
-
-// Mostrar HTML del carrito
+// Función para actualizar el carrito en el DOM
 const showHTML = () => {
-    // Si no hay productos, mostramos un mensaje y reseteamos valores
     if (!allProducts.length) {
         rowProduct.innerHTML = `<p class="cart-empty">No hay productos agregados al carrito.</p>`;
         valorTotal.innerText = formatPrice(0);
         countProduct.innerText = 0;
-        localStorage.removeItem('carrito');  // Eliminar del storage si el carrito está vacío
+        localStorage.removeItem('carrito');
         return;
     }
 
     rowProduct.innerHTML = '';
     let total = 0;
 
-    // Mostrar cada producto en el carrito
     allProducts.forEach(product => {
-        const { quantity, title, price } = product; // Desestructuración del producto
+        const { quantity, title, price } = product;
+        const totalPrice = formatPrice(price * quantity);
+        
         const containerProduct = document.createElement('div');
         containerProduct.classList.add('cart-product');
-
-        const totalPrice = formatPrice(price * quantity);
         containerProduct.innerHTML = `
             <div class="info-cart-product">
                 <span class="cantidad-producto-carrito">${quantity}</span>
@@ -86,18 +46,67 @@ const showHTML = () => {
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
             </svg>
         `;
-
+        
         rowProduct.append(containerProduct);
-        total += price * quantity; // Sumar el total
+        total += price * quantity;
     });
 
-    // Actualizar el total a pagar y el contador de productos
     valorTotal.innerText = formatPrice(total);
     countProduct.innerText = allProducts.reduce((sum, product) => sum + product.quantity, 0);
 
-    // Guardar el carrito en localStorage
-    localStorage.setItem('carrito', JSON.stringify(allProducts));
+    saveCart();
 };
 
-// Inicializar el carrito vacío o con productos recuperados de localStorage
+// Función para guardar el carrito en localStorage
+const saveCart = () => {
+    try {
+        localStorage.setItem('carrito', JSON.stringify(allProducts));
+    } catch (error) {
+        console.error('Error al guardar el carrito en localStorage:', error);
+    }
+};
+
+// Función para agregar un producto al carrito
+const addProductToCart = (e) => {
+    if (e.target.classList.contains('boton-item')) {
+        const product = e.target.parentElement;
+
+        const { textContent: title } = product.querySelector('.titulo-item');
+        const price = parseFloat(product.querySelector('.precio-item').textContent.replace(/\./g, "").replace("$", ""));
+        
+        if (isNaN(price)) {
+            console.error('Precio no válido');
+            return;
+        }
+
+        const infoProduct = { quantity: 1, title, price };
+
+        const existe = allProducts.find(p => p.title === infoProduct.title);
+        existe ? existe.quantity++ : allProducts.push(infoProduct);
+
+        containerCartProducts.classList.contains('hidden-cart') && toggleCartVisibility();
+
+        showHTML();
+    }
+};
+
+// Función para quitar un producto del carrito
+const removeProductFromCart = (e) => {
+    if (e.target.classList.contains('icon-close')) {
+        const product = e.target.closest('.cart-product');
+        const { textContent: title } = product.querySelector('.titulo-producto-carrito');
+
+        allProducts = allProducts.filter(p => p.title !== title);
+        showHTML();
+
+        !allProducts.length && toggleCartVisibility();
+    }
+};
+
+// Eventos
+btnCart.addEventListener('click', toggleCartVisibility);
+productoLista.addEventListener('click', addProductToCart);
+rowProduct.addEventListener('click', removeProductFromCart);
+
+// Inicializa el carrito al cargar la página
 showHTML();
